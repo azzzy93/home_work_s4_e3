@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
-    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
