@@ -10,13 +10,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import kg.geektech.taskapp36.Prefs;
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.interfaces.OnItemClickListener;
 import kg.geektech.taskapp36.models.Task;
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
-    private ArrayList<Task>list;
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+    private ArrayList<Task> list;
     private OnItemClickListener onItemClickListener;
+    private View view;
 
     public TaskAdapter() {
         list = new ArrayList<>();
@@ -25,7 +27,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_task, parent, false);
         return new ViewHolder(view);
     }
@@ -33,6 +35,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(list.get(position));
+
+        if (position % 2 == 0) {
+            view.setBackgroundResource(R.color.red);
+        } else {
+            view.setBackgroundResource(R.color.green);
+        }
     }
 
     @Override
@@ -54,8 +62,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder>{
         notifyItemRemoved(position);
     }
 
-    public void copyItem(int position) {
-        list.add(list.get(position));
+    public String getStringPosition(int pos) {
+        return list.get(pos).getText();
+    }
+
+    public void changeString(String s, int i) {
+        list.remove(i);
+        list.add(i, new Task(s, System.currentTimeMillis()));
         notifyDataSetChanged();
     }
 

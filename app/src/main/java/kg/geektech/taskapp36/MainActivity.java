@@ -2,15 +2,10 @@ package kg.geektech.taskapp36;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
+
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
@@ -37,13 +32,15 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         showOrHideView();
-        initListeners();
     }
 
     private void showOrHideView() {
-        if (true) {
+        Prefs prefs = new Prefs(this);
+
+        if (!prefs.isBoardShown()) {
             navController.navigate(R.id.boardFragment);
         }
+
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_home ||
                     destination.getId() == R.id.navigation_dashboard ||
@@ -53,19 +50,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 binding.navView.setVisibility(View.GONE);
             }
+
             if (destination.getId() == R.id.boardFragment){
                 getSupportActionBar().hide();
-                binding.btnScip.setVisibility(View.VISIBLE);
             } else {
                 getSupportActionBar().show();
-                binding.btnScip.setVisibility(View.GONE);
             }
-        });
-    }
-
-    private void initListeners() {
-        binding.btnScip.setOnClickListener(view -> {
-            navController.navigateUp();
         });
     }
 

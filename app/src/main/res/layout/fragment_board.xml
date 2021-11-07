@@ -22,4 +22,13 @@
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp" />
 
+    <Button
+        android:id="@+id/btn_scip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:text="Skip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

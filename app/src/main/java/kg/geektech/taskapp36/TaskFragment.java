@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import kg.geektech.taskapp36.models.Task;
 
 public class TaskFragment extends Fragment {
     private EditText editText;
     private Button buttonSave;
+    private Bundle getBundle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -33,17 +35,40 @@ public class TaskFragment extends Fragment {
         editText = view.findViewById(R.id.editText);
         buttonSave = view.findViewById(R.id.btnSave);
 
-        buttonSave.setOnClickListener(view1 -> {
-            save();
-        });
+
+        if (getArguments() != null) {
+            getBundle = getArguments();
+            String s = getBundle.getString("keyString");
+            editText.setText(s);
+
+            buttonSave.setOnClickListener(v -> {
+                change();
+            });
+        } else {
+            buttonSave.setOnClickListener(view1 -> {
+                save();
+            });
+        }
+    }
+
+    private void change() {
+        if (!editText.getText().toString().isEmpty()) {
+            Bundle setBundle = new Bundle();
+            setBundle.putString("keyString1", editText.getText().toString().trim());
+            setBundle.putInt("keyInt1", getBundle.getInt("keyInt"));
+            getParentFragmentManager().setFragmentResult("rk_task1", setBundle);
+        }
+        close();
     }
 
     private void save() {
-        String text = editText.getText().toString().trim();
-        Task task = new Task(text, System.currentTimeMillis());
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("task", task);
-        getParentFragmentManager().setFragmentResult("rk_task", bundle);
+        if (!editText.getText().toString().isEmpty()) {
+            String text = editText.getText().toString().trim();
+            Task task = new Task(text, System.currentTimeMillis());
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("task", task);
+            getParentFragmentManager().setFragmentResult("rk_task", bundle);
+        }
         close();
     }
 

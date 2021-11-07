@@ -13,13 +13,15 @@ import androidx.annotation.NonNull;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.interfaces.OnItemClickListener;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
     private String[] titles = new String[]{"Салам", "Привет", "Hello"};
     private String[] desc = new String[]{"Кош келиниз!", "Добро пожаловать!", "Welcome!"};
-    private Integer[] img = new Integer[]{R.drawable.kyrgyzstan, R.drawable.moscow, R.drawable.usa};
+    private Integer[] img = new Integer[]{R.raw.city, R.raw.city2, R.raw.city3};
     private OnItemClickListener onItemClickListener;
 
     @NonNull
@@ -47,14 +49,14 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textTitle;
         private TextView textDesc;
-        private ImageView imageView;
+        private LottieAnimationView lottieAnimationView;
         private Button btnStart;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitleBoard);
             textDesc = itemView.findViewById(R.id.textDesc);
-            imageView = itemView.findViewById(R.id.imageViewBoard);
+            lottieAnimationView = itemView.findViewById(R.id.animation_view);
             btnStart = itemView.findViewById(R.id.btnStart);
             btnStart.setOnClickListener(view -> {
                 onItemClickListener.onClick(getAdapterPosition());
@@ -64,8 +66,9 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
         public void bind(int position) {
             textTitle.setText(titles[position]);
             textDesc.setText(desc[position]);
-            imageView.setImageResource(img[position]);
-            if (position == 2){
+            lottieAnimationView.setAnimation(img[position]);
+
+            if (position == titles.length - 1) {
                 btnStart.setVisibility(View.VISIBLE);
             } else {
                 btnStart.setVisibility(View.INVISIBLE);

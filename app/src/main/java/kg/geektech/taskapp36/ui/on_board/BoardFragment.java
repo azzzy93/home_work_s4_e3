@@ -2,6 +2,7 @@ package kg.geektech.taskapp36.ui.on_board;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import kg.geektech.taskapp36.Prefs;
 import kg.geektech.taskapp36.R;
 import kg.geektech.taskapp36.databinding.FragmentBoardBinding;
 import kg.geektech.taskapp36.interfaces.OnItemClickListener;
@@ -21,7 +23,7 @@ import kg.geektech.taskapp36.interfaces.OnItemClickListener;
 
 public class BoardFragment extends Fragment {
     private FragmentBoardBinding binding;
-    BoardAdapter adapter;
+    private BoardAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -34,13 +36,24 @@ public class BoardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initView();
+        initListeners();
+    }
+
+    private void initView() {
         adapter = new BoardAdapter();
         binding.viewPager.setAdapter(adapter);
+        binding.viewPager.setAdapter(adapter);
+        new TabLayoutMediator(binding.tabLayoutBoard, binding.viewPager, ((tab, position) -> {
+        })).attach();
+    }
+
+    private void initListeners() {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
-                navController.navigateUp();
+                closeFragment();
             }
 
             @Override
@@ -49,9 +62,23 @@ public class BoardFragment extends Fragment {
             }
         });
 
-        binding.viewPager.setAdapter(adapter);
-        new TabLayoutMediator(binding.tabLayoutBoard, binding.viewPager, ((tab, position) -> {
+        binding.btnScip.setOnClickListener(v -> {
+            closeFragment();
+        });
 
-        })).attach();
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requireActivity().finish();
+            }
+        });
+
+    }
+
+    private void closeFragment() {
+        Prefs prefs = new Prefs(requireContext());
+        prefs.saveBoardState();
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigateUp();
     }
 }
