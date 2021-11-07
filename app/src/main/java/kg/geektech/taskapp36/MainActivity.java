@@ -2,6 +2,7 @@ package kg.geektech.taskapp36;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -16,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private NavController navController;
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
