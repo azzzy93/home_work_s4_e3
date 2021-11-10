@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/drawable-anydpi/ic_menu_mine.xml" value="0.2703125" />
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/drawable/default_dot.xml" value="0.2703125" />
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/drawable/ic_add.xml" value="0.2703125" />
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.2703125" />
@@ -19,6 +20,7 @@
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/layout/list_task.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/layout/list_task_2.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Azzzy93/AndroidStudioProjects/TaskApp36/app/src/main/res/menu/menu.xml" value="0.25416666666666665" />
       </map>
     </option>
   </component>

@@ -11,64 +11,56 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
+import kg.geektech.taskapp36.databinding.FragmentTaskBinding;
 import kg.geektech.taskapp36.models.Task;
 
 public class TaskFragment extends Fragment {
-    private EditText editText;
-    private Button buttonSave;
-    private Bundle getBundle;
+    private Task task;
+    private FragmentTaskBinding binding;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_task, container, false);
+        binding = FragmentTaskBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        editText = view.findViewById(R.id.editText);
-        buttonSave = view.findViewById(R.id.btnSave);
 
-
-        if (getArguments() != null) {
-            getBundle = getArguments();
-            String s = getBundle.getString("keyString");
-            editText.setText(s);
-
-            buttonSave.setOnClickListener(v -> {
-                change();
-            });
-        } else {
-            buttonSave.setOnClickListener(view1 -> {
-                save();
-            });
+        task = (Task) requireArguments().getSerializable("task");
+        if (task != null) {
+            binding.editText.setText(task.getText());
         }
+        initListeners();
     }
 
-    private void change() {
-        if (!editText.getText().toString().isEmpty()) {
-            Bundle setBundle = new Bundle();
-            setBundle.putString("keyString1", editText.getText().toString().trim());
-            setBundle.putInt("keyInt1", getBundle.getInt("keyInt"));
-            getParentFragmentManager().setFragmentResult("rk_task1", setBundle);
-        }
-        close();
+    private void initListeners() {
+        binding.btnSave.setOnClickListener(view1 -> {
+            if (!binding.editText.getText().toString().isEmpty()) {
+                save();
+            } else {
+                close();
+            }
+        });
     }
 
     private void save() {
-        if (!editText.getText().toString().isEmpty()) {
-            String text = editText.getText().toString().trim();
-            Task task = new Task(text, System.currentTimeMillis());
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("task", task);
-            getParentFragmentManager().setFragmentResult("rk_task", bundle);
+        String text = binding.editText.getText().toString().trim();
+
+        if (task == null) {
+            task = new Task(text, System.currentTimeMillis());
+            App.getInstance().getDatabase().taskDao().insert(task);
+        } else {
+            task.setText(text);
+            App.getInstance().getDatabase().taskDao().update(task);
         }
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("task", task);
+        getParentFragmentManager().setFragmentResult("rk_task", bundle);
         close();
     }
 

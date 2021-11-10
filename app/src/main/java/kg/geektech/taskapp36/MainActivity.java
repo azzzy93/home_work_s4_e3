@@ -1,8 +1,10 @@
 package kg.geektech.taskapp36;
 
 import android.os.Bundle;
+
 import android.view.View;
-import android.widget.TextView;
+
+
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -10,6 +12,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 
 import kg.geektech.taskapp36.databinding.ActivityMainBinding;
 
@@ -64,4 +67,5 @@ public class MainActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         return navController.navigateUp();
     }
+
 }
