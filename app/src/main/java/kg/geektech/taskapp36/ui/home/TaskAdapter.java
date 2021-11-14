@@ -9,8 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import kg.geektech.taskapp36.R;
@@ -50,11 +48,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return list.size();
     }
 
-    public void addItem(Task task) {
-        list.add(0, task);
-        notifyItemInserted(list.indexOf(task));
-    }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
@@ -71,26 +64,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public Task getItem(int position) {
         return list.get(position);
-    }
-
-    public void updateItem(Integer pos, Task task) {
-        list.set(pos, task);
-        notifyItemChanged(pos);
-    }
-
-    public void sortABC() {
-        Collections.sort(list, new Comparator<Task>() {
-            @Override
-            public int compare(Task o1, Task o2) {
-                return o1.getText().compareTo(o2.getText());
-            }
-        });
-        notifyDataSetChanged();
-    }
-
-    public void sortLastFirst() {
-        Collections.reverse(list);
-        notifyDataSetChanged();
     }
 
     public void clearList() {

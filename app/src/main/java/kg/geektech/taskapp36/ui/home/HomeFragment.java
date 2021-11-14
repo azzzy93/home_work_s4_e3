@@ -8,7 +8,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,21 +24,17 @@ import kg.geektech.taskapp36.models.Task;
 public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private TaskAdapter adapter;
-    private int pos;
     private boolean b;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
 
+        setHasOptionsMenu(true);
         adapter = new TaskAdapter();
-        adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
-        adapter.sortLastFirst();
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(int position) {
-                pos = position;
                 Task task = adapter.getItem(position);
                 openFragment(task);
             }
@@ -69,13 +64,12 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        initListeners();
         initList();
+        initListeners();
     }
 
     private void initListeners() {
         binding.fab.setOnClickListener(view1 -> {
-            pos = -1;
             openFragment(null);
         });
     }
@@ -89,17 +83,8 @@ public class HomeFragment extends Fragment {
 
     private void initList() {
         binding.recyclerView.setAdapter(adapter);
-
-        getParentFragmentManager().setFragmentResultListener("rk_task",
-                getViewLifecycleOwner(),
-                (requestKey, result) -> {
-                    Task task = (Task) result.getSerializable("task");
-                    if (pos == -1) {
-                        adapter.addItem(task);
-                    } else {
-                        adapter.updateItem(pos, task);
-                    }
-                });
+        adapter.clearList();
+        adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
     }
 
     @Override
@@ -112,17 +97,15 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sort) {
             if (!b) {
-                adapter.sortABC();
+                adapter.clearList();
+                adapter.addItems(App.getInstance().getDatabase().taskDao().getAllSortedByTitle());
                 b = true;
             } else {
                 adapter.clearList();
                 adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
-                adapter.sortLastFirst();
                 b = false;
             }
-            return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

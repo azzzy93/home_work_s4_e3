@@ -30,14 +30,15 @@ public class TaskFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        task = (Task) requireArguments().getSerializable("task");
-        if (task != null) {
-            binding.editText.setText(task.getText());
-        }
         initListeners();
     }
 
     private void initListeners() {
+        task = (Task) requireArguments().getSerializable("task");
+        if (task != null) {
+            binding.editText.setText(task.getText());
+        }
+
         binding.btnSave.setOnClickListener(view1 -> {
             if (!binding.editText.getText().toString().isEmpty()) {
                 save();
@@ -58,9 +59,6 @@ public class TaskFragment extends Fragment {
             App.getInstance().getDatabase().taskDao().update(task);
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("task", task);
-        getParentFragmentManager().setFragmentResult("rk_task", bundle);
         close();
     }
 

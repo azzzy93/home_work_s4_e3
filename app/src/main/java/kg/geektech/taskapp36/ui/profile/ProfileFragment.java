@@ -1,8 +1,8 @@
 package kg.geektech.taskapp36.ui.profile;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -13,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -20,6 +22,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -89,11 +94,34 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initListeners() {
+
         binding.ivProfile.setOnClickListener(view -> {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
             activityResultLauncher.launch(intent);
         });
+
+        binding.btnSignOut.setOnClickListener(v -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+            alertDialog.setTitle("Выход с аккаунта");
+            alertDialog.setMessage("Вы точно хотите выйти с аккаунта?");
+
+            alertDialog.setNegativeButton("Нет", (dialog, which) -> {
+                Toast.makeText(requireActivity(), "Вы остались в аккаунте", Toast.LENGTH_SHORT).show();
+            });
+
+            alertDialog.setPositiveButton("Да", (dialog, which) -> {
+                FirebaseAuth.getInstance().signOut();
+                openFragment();
+            });
+
+            alertDialog.show();
+        });
+    }
+
+    private void openFragment() {
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_main);
+        navController.navigate(R.id.loginFragment);
     }
 
     public static String encodeToBase64(Bitmap image) {

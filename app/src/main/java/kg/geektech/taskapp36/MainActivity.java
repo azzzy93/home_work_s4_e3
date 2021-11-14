@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 
 
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 
@@ -13,6 +12,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import kg.geektech.taskapp36.databinding.ActivityMainBinding;
 
@@ -44,18 +45,21 @@ public class MainActivity extends AppCompatActivity {
         if (!prefs.isBoardShown()) {
             navController.navigate(R.id.boardFragment);
         }
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            navController.navigate(R.id.loginFragment);
+        }
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
             if (destination.getId() == R.id.navigation_home ||
                     destination.getId() == R.id.navigation_dashboard ||
                     destination.getId() == R.id.navigation_notifications ||
-                    destination.getId() == R.id.profile_fragment){
+                    destination.getId() == R.id.profile_fragment) {
                 binding.navView.setVisibility(View.VISIBLE);
             } else {
                 binding.navView.setVisibility(View.GONE);
             }
 
-            if (destination.getId() == R.id.boardFragment){
+            if (destination.getId() == R.id.boardFragment || destination.getId() == R.id.loginFragment) {
                 getSupportActionBar().hide();
             } else {
                 getSupportActionBar().show();
