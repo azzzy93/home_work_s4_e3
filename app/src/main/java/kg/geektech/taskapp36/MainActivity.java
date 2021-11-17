@@ -42,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
     private void showOrHideView() {
         Prefs prefs = new Prefs(this);
 
-        if (!prefs.isBoardShown()) {
-            navController.navigate(R.id.boardFragment);
-        }
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             navController.navigate(R.id.loginFragment);
+        }
+        if (!prefs.isBoardShown()) {
+            navController.navigate(R.id.boardFragment);
         }
 
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {

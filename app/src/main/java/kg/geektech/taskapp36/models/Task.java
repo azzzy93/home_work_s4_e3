@@ -9,9 +9,20 @@ import java.io.Serializable;
 public class Task implements Serializable {
     private String text;
     private long createAdd;
-
     @PrimaryKey(autoGenerate = true)
     private long id;
+    private String docId;
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
+    }
+
+    public Task() {
+    }
 
     public Task(String text, long createAdd) {
         this.text = text;

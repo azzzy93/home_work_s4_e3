@@ -11,6 +11,11 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import kg.geektech.taskapp36.databinding.FragmentTaskBinding;
 import kg.geektech.taskapp36.models.Task;
@@ -54,12 +59,37 @@ public class TaskFragment extends Fragment {
         if (task == null) {
             task = new Task(text, System.currentTimeMillis());
             App.getInstance().getDatabase().taskDao().insert(task);
+            saveToFirestore(task);
         } else {
             task.setText(text);
             App.getInstance().getDatabase().taskDao().update(task);
+            if (task.getDocId() != null) {
+                updateToFirestore(task);
+            } else {
+                close();
+            }
         }
+    }
 
-        close();
+    private void updateToFirestore(Task task) {
+        FirebaseFirestore.getInstance()
+                .collection("tasks")
+                .document(task.getDocId())
+                .update("text", task.getText())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(requireActivity(), "База данных успешно обновлено", Toast.LENGTH_SHORT).show();
+                    close();
+                });
+    }
+
+    private void saveToFirestore(Task task) {
+        FirebaseFirestore.getInstance()
+                .collection("tasks")
+                .add(task)
+                .addOnCompleteListener(t -> {
+                    if (t.isSuccessful())
+                        close();
+                });
     }
 
     private void close() {
