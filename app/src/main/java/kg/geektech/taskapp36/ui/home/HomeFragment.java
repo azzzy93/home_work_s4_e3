@@ -83,7 +83,6 @@ public class HomeFragment extends Fragment {
 
     private void initList() {
         binding.recyclerView.setAdapter(adapter);
-        adapter.clearList();
         adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
     }
 
@@ -97,11 +96,9 @@ public class HomeFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.sort) {
             if (!b) {
-                adapter.clearList();
                 adapter.addItems(App.getInstance().getDatabase().taskDao().getAllSortedByTitle());
                 b = true;
             } else {
-                adapter.clearList();
                 adapter.addItems(App.getInstance().getDatabase().taskDao().getAll());
                 b = false;
             }

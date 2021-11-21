@@ -13,7 +13,7 @@ import kg.geektech.taskapp36.models.Task;
 @Dao
 public interface TaskDao {
 
-    @Query("SELECT * FROM task order by createAdd DESC")
+    @Query("SELECT * FROM task order by createdAt DESC")
     List<Task> getAll();
 
     @Query("SELECT * FROM task order by text")

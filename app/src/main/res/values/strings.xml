@@ -8,4 +8,5 @@
     <string name="profile">Profile</string>
     <string name="task">Task</string>
     <string name="web_client_id">408583908632-1u2mm1buscinb8tte2bsej3204jcm3ee.apps.googleusercontent.com</string>
+    <string name="choice_photo">Выберите фотографию нажав на желтый квадрат</string>
 </resources>

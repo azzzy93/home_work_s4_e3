@@ -8,10 +8,11 @@ import java.io.Serializable;
 @Entity
 public class Task implements Serializable {
     private String text;
-    private long createAdd;
+    private long createdAt;
     @PrimaryKey(autoGenerate = true)
     private long id;
     private String docId;
+    private String imgUri;
 
     public String getDocId() {
         return docId;
@@ -24,9 +25,9 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(String text, long createAdd) {
+    public Task(String text, long createdAt) {
         this.text = text;
-        this.createAdd = createAdd;
+        this.createdAt = createdAt;
     }
 
     public String getText() {
@@ -37,12 +38,12 @@ public class Task implements Serializable {
         this.text = text;
     }
 
-    public long getCreateAdd() {
-        return createAdd;
+    public long getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreateAdd(long createAdd) {
-        this.createAdd = createAdd;
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
     }
 
     public long getId() {
@@ -51,5 +52,13 @@ public class Task implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getImgUri() {
+        return imgUri;
+    }
+
+    public void setImgUri(String imgUri) {
+        this.imgUri = imgUri;
     }
 }

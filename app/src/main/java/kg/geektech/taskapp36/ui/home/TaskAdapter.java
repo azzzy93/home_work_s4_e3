@@ -3,10 +3,13 @@ package kg.geektech.taskapp36.ui.home;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +35,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(list.get(position));
+
+        Glide.with(holder.getIvImage())
+                .load(list.get(position).getImgUri()).into(holder.getIvImage());
+
+        holder.getTextTitle().setText(list.get(position).getText());
 
         if (position % 2 == 0) {
             view.setBackgroundResource(R.color.red);
         } else {
             view.setBackgroundResource(R.color.green);
         }
+
     }
 
     @Override
@@ -58,6 +67,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     }
 
     public void addItems(List<Task> tasks) {
+        list.clear();
         list.addAll(tasks);
         notifyDataSetChanged();
     }
@@ -66,17 +76,22 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         return list.get(position);
     }
 
-    public void clearList() {
-        list.clear();
-        notifyDataSetChanged();
-    }
+
+
+
+
+
+
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView textTitle;
+        private ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textTitle = itemView.findViewById(R.id.textTitleTask);
+            imageView = itemView.findViewById(R.id.ivTask);
 
             itemView.setOnClickListener(view -> {
                 onItemClickListener.onClick(getAdapterPosition());
@@ -86,10 +101,15 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 onItemClickListener.onLongClick(getAdapterPosition());
                 return true;
             });
+
         }
 
-        public void bind(Task task) {
-            textTitle.setText(task.getText());
+        public ImageView getIvImage() {
+            return imageView;
+        }
+
+        public TextView getTextTitle() {
+            return textTitle;
         }
     }
 }

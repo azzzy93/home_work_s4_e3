@@ -13,7 +13,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,11 +84,32 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         binding.recyclerView.setAdapter(adapter);
         getData();
+//        getDataLive();
+    }
+
+    private void getDataLive() {
+        db.collection("tasks")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        List<Task> list = new ArrayList<>();
+                        for (DocumentSnapshot snapshot : value) {
+                            Task task = snapshot.toObject(Task.class);
+                            assert task != null;
+                            task.setDocId(snapshot.getId());
+                            list.add(task);
+                        }
+//                    List<Task>list = snapshots.toObjects(Task.class);
+                        adapter.addItems(list);
+                    }
+                });
     }
 
     private void getData() {
-        adapter.clearList();
-        db.collection("tasks").get()
+        db.collection("tasks")
+                .orderBy("createdAt", Query.Direction.DESCENDING)
+                .get()
                 .addOnSuccessListener(snapshots -> {
                     List<Task> list = new ArrayList<>();
                     for (DocumentSnapshot snapshot : snapshots) {
