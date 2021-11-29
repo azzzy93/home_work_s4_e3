@@ -1,5 +1,11 @@
 package kg.geektech.taskapp36.ui.dashboard;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +38,7 @@ public class DashboardFragment extends Fragment {
     private FragmentDashboardBinding binding;
     private TaskAdapter adapter;
     private FirebaseFirestore db;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,18 +80,44 @@ public class DashboardFragment extends Fragment {
         return binding.getRoot();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         binding.recyclerView.setAdapter(adapter);
-        getData();
-//        getDataLive();
+
+        getBroadcastRec();
+    }
+
+    private void getBroadcastRec() {
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    if (isOnline(context)) {
+                        Toast.makeText(context, "Подключено к интернету", Toast.LENGTH_SHORT).show();
+                        dialog(true);
+                    } else {
+                        Toast.makeText(context, "Интернет отключен", Toast.LENGTH_SHORT).show();
+                        dialog(false);
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    public boolean isOnline(Context context) {
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            return (networkInfo != null && networkInfo.isConnected());
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     private void getDataLive() {
@@ -107,6 +140,9 @@ public class DashboardFragment extends Fragment {
     }
 
     private void getData() {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        binding.recyclerView.setVisibility(View.GONE);
+
         db.collection("tasks")
                 .orderBy("createdAt", Query.Direction.DESCENDING)
                 .get()
@@ -120,6 +156,33 @@ public class DashboardFragment extends Fragment {
                     }
 //                    List<Task>list = snapshots.toObjects(Task.class);
                     adapter.addItems(list);
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.recyclerView.setVisibility(View.VISIBLE);
                 });
+    }
+
+    public void dialog(boolean value) {
+        if (value) {
+            binding.tvNoInternet.setVisibility(View.GONE);
+            getData();
+        } else {
+            binding.tvNoInternet.setVisibility(View.VISIBLE);
+            binding.recyclerView.setVisibility(View.GONE);
+            binding.progressBar.setVisibility(View.GONE);
+        }
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+        unRegisterNetwork();
+    }
+
+    private void unRegisterNetwork() {
+        try {
+            getActivity().unregisterReceiver(broadcastReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 }
